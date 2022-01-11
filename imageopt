@@ -51,29 +51,29 @@ fs.readdir(process.cwd(), (err, files) => {
       {
         type: "checkbox",
         name: "images",
-        message: "Select images to be optimized",
+        message: "Select images to be optimized: ",
         choices: [...files],
       },
       {
         type: "input",
         name: "sizeX",
-        message: "X axis length in pixels",
+        message: "New width: ",
       },
       {
         type: "input",
         name: "sizeY",
-        message: "Y axis length in pixels",
+        message: "New height: ",
       },
       {
         type: "list",
         name: "outputFormat",
-        message: "Select an output format",
+        message: "Select an output format: ",
         choices: [...OUTPUT_IMAGE_FORMATS],
       },
       {
         type: "list",
         name: "colorFormat",
-        message: "Select a color format",
+        message: "Select a color format: ",
         choices: [...COLOR_MAP_OUTPUT],
       },
     ])

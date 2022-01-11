@@ -34,7 +34,7 @@ const COLOR_MAP_OUTPUT = [
     'srgb'
 ]
 
-fs.readdir(__dirname, (err, files) => {
+fs.readdir(process.cwd(), (err, files) => {
 
     if (err) {
         return console.error(`Unable to scan directory ${err}`)

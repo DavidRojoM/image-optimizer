@@ -1,0 +1,51 @@
+#! node
+
+const inquirer = require('inquirer')
+const fs       = require('fs')
+const path     = require('path')
+
+const IMAGE_FORMATS = [
+    '.jpeg',
+    '.png',
+    '.webp',
+    '.avif',
+    '.tiff',
+    '.gif',
+    '.svg',
+]
+
+fs.readdir(__dirname, (err, files) => {
+
+    if (err) {
+        return console.log(`Unable to scan directory ${err}`)
+    }
+
+    files = files.filter(file => {
+        const incluye = IMAGE_FORMATS.includes(path.extname(file).toLowerCase())
+        console.log('archivo:',path.extname(file).toLowerCase())
+        console.log(incluye)
+        return incluye
+    })
+
+    if (files.length < 1) {
+        return console.log(`There's no images here!`)
+    }
+
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                name: 'image',
+                message: 'Select an image to be optimized',
+                choices: [...files],
+            }
+        ])
+        .then((answers) => {
+            console.log(answers)
+        });
+})
+
+
+
+
+

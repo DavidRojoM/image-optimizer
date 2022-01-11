@@ -3,6 +3,25 @@
 const inquirer = require('inquirer')
 const fs       = require('fs')
 const path     = require('path')
+const sharp    = require('sharp')
+
+const INPUT_IMAGE_FORMATS = [
+    'jpeg',
+    'png',
+    'webp',
+    'avif',
+    'tiff',
+    'gif',
+    'svg',
+]
+
+const OUTPUT_IMAGE_FORMATS = [
+    'jpeg',
+    'png',
+    'webp',
+    'avif',
+    'tiff'
+]
 
 const IMAGE_FORMATS = [
     '.jpeg',

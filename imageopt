@@ -24,11 +24,14 @@ const OUTPUT_IMAGE_FORMATS = [
 ]
 
 const COLOR_MAP_OUTPUT = [
-    'srgb',
-    'rgb',
-    'cmyk',
     'b-w',
-    'lab'
+    'cmyk',
+    'hsv',
+    'lab',
+    'rgb',
+    'rgb16',
+    'scrgb',
+    'srgb'
 ]
 
 fs.readdir(__dirname, (err, files) => {
@@ -89,7 +92,9 @@ fs.readdir(__dirname, (err, files) => {
                         console.log(info)
                     });
             }
-        });
+        }).catch(err => {
+        console.error(err)
+    });
 })
 
 

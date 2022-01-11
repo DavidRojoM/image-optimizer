@@ -1,0 +1,2 @@
+- [ ] How to deal with dependencies
+- [ ] Extract methods

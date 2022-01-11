@@ -1,103 +1,110 @@
 #! node
 
-const inquirer = require('inquirer')
-const fs       = require('fs')
-const path     = require('path')
-const sharp    = require('sharp')
+const inquirer = require("inquirer");
+const fs = require("fs");
+const path = require("path");
+const sharp = require("sharp");
 
 const INPUT_IMAGE_FORMATS = [
-    'jpeg',
-    'png',
-    'webp',
-    'avif',
-    'tiff',
-    'gif',
-    'svg',
-]
+  "jpeg",
+  "png",
+  "webp",
+  "avif",
+  "tiff",
+  "gif",
+  "svg",
+];
 
-const OUTPUT_IMAGE_FORMATS = [
-    'jpeg',
-    'png',
-    'webp',
-    'avif',
-    'tiff'
-]
+const OUTPUT_IMAGE_FORMATS = ["jpeg", "png", "webp", "avif", "tiff"];
 
 const COLOR_MAP_OUTPUT = [
-    'b-w',
-    'cmyk',
-    'hsv',
-    'lab',
-    'rgb',
-    'rgb16',
-    'scrgb',
-    'srgb'
-]
+  "b-w",
+  "cmyk",
+  "hsv",
+  "lab",
+  "rgb",
+  "rgb16",
+  "scrgb",
+  "srgb",
+];
+
+async function getMetadata(file) {
+  const metadata = await sharp(file).metadata();
+  console.log(file,metadata,'\n');
+}
 
 fs.readdir(process.cwd(), (err, files) => {
+  if (err) {
+    return console.error(`Unable to scan directory ${err}`);
+  }
 
-    if (err) {
-        return console.error(`Unable to scan directory ${err}`)
-    }
+  files = files.filter((file) =>
+    INPUT_IMAGE_FORMATS.includes(path.extname(file).toLowerCase().substr(1))
+  );
 
-    files = files.filter(file =>
-        INPUT_IMAGE_FORMATS.includes(path.extname(file).toLowerCase().substr(1))
-    )
+  if (files.length < 1) {
+    return console.error(`There's no images here!`);
+  }
 
-    if (files.length < 1) {
-        return console.error(`There's no images here!`)
-    }
+  inquirer
+    .prompt([
+      {
+        type: "checkbox",
+        name: "images",
+        message: "Select images to be optimized",
+        choices: [...files],
+      },
+      {
+        type: "input",
+        name: "sizeX",
+        message: "X axis length in pixels",
+      },
+      {
+        type: "input",
+        name: "sizeY",
+        message: "Y axis length in pixels",
+      },
+      {
+        type: "list",
+        name: "outputFormat",
+        message: "Select an output format",
+        choices: [...OUTPUT_IMAGE_FORMATS],
+      },
+      {
+        type: "list",
+        name: "colorFormat",
+        message: "Select a color format",
+        choices: [...COLOR_MAP_OUTPUT],
+      },
+    ])
+    .then(({ images, sizeX, sizeY, outputFormat, colorFormat }) => {
+      for (const image of images) {
 
-    inquirer
-        .prompt([
-            {
-                type: 'checkbox',
-                name: 'images',
-                message: 'Select images to be optimized',
-                choices: [...files],
-            },
-            {
-                type: 'input',
-                name: 'sizeX',
-                message: 'X axis length in pixels',
-            },
-            {
-                type: 'input',
-                name: 'sizeY',
-                message: 'Y axis length in pixels',
-            },
-            {
-                type: 'list',
-                name: 'outputFormat',
-                message: 'Select an output format',
-                choices: [...OUTPUT_IMAGE_FORMATS],
-            },
-            {
-                type: 'list',
-                name: 'colorFormat',
-                message: 'Select a color format',
-                choices: [...COLOR_MAP_OUTPUT],
-            },
-        ])
-        .then(({images, sizeX, sizeY, outputFormat, colorFormat}) => {
-            for (const image of images) {
-                sharp(image)
-                    .resize(+sizeX, +sizeY)
-                    .toFormat(outputFormat)
-                    .toColorspace(colorFormat)
-                    .toFile(`${image.substr(0, image.lastIndexOf('.')) || image}-${sizeX}x${sizeY}-${colorFormat}.${outputFormat}`, (err, info) => {
-                        if (err) {
-                            return console.error(err)
-                        }
-                        console.log(info)
-                    });
+        getMetadata(image).catch((err) => console.error(err));
+
+        sharp(image)
+          .resize(+sizeX, +sizeY)
+          .toFormat(outputFormat)
+          .toColorspace(colorFormat)
+          .toFile(
+            `${
+              image.substr(0, image.lastIndexOf(".")) || image
+            }-${sizeX}x${sizeY}-${colorFormat}.${outputFormat}`,
+            (err) => {
+              if (err) {
+                return console.error(err);
+              }
+
+              getMetadata(
+                `${
+                  image.substr(0, image.lastIndexOf(".")) || image
+                }-${sizeX}x${sizeY}-${colorFormat}.${outputFormat}`
+              ).catch((err) => console.error(err));
             }
-        }).catch(err => {
-        console.error(err)
+          );
+      }
+    })
+    .catch((err) => {
+      console.error(err);
     });
-})
-
-
-
-
-
+});

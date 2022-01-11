@@ -1,2 +1,3 @@
 - [ ] How to deal with dependencies
 - [ ] Extract methods
+- [ ] Unable to convert sRGB to RGB

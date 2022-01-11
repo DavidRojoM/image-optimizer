@@ -29,8 +29,15 @@ const COLOR_MAP_OUTPUT = [
 ];
 
 async function getMetadata(file) {
-  const metadata = await sharp(file).metadata();
-  console.log(file,metadata,'\n');
+  let metadata = await sharp(file).metadata()
+  fs.stat(file, (err, {size}) => {
+    const sizeToMb = `${(size / 1048576).toFixed(4)}Mb`
+    metadata = {
+      ...metadata,
+      size: sizeToMb
+    }
+    console.log(file,metadata,'\n');
+  });
 }
 
 fs.readdir(process.cwd(), (err, files) => {

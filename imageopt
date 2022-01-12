@@ -41,7 +41,8 @@ async function getMetadata(file) {
       ...metadata,
       size: sizeToMb
     }
-    console.log(file,metadata,'\n');
+    console.log(file)
+    console.table(metadata);
   });
 }
 

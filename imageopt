@@ -46,6 +46,19 @@ async function getMetadata(file) {
   });
 }
 
+const compress = (image, format, compress) => {
+  const process = {
+    jpeg: () => image.jpeg({ quality: compress * 10 }),
+    webp: () => image.webp({ quality: compress * 10 }),
+    png: () => image.png({ quality: compress * 10 }),
+    avif: () => image.avif({ quality: compress * 10 }),
+    tiff: () => image.tiff({ quality: compress * 10 }),
+  };
+
+  process[format]();
+
+  return image;
+};
 fs.readdir(process.cwd(), (err, files) => {
   if (err) {
     return console.error(`Unable to scan directory ${err}`);

@@ -109,31 +109,31 @@ fs.readdir(process.cwd(), (err, files) => {
         choices: [...COLOR_MAP_OUTPUT],
       },
     ])
-    .then(({ images, sizeX, sizeY, outputFormat, colorFormat }) => {
-      for (const image of images) {
+    .then(
+      ({ images, sizeX, sizeY, outputFormat, colorFormat, compression }) => {
 
-        getMetadata(image).catch((err) => console.error(err));
+        for (const image of images) {
+          getMetadata(image).catch((err) => console.error(err));
 
-        sharp(image)
-          .resize(+sizeX, +sizeY)
-          .toFormat(outputFormat)
-          .toColorspace(colorFormat)
-          .toFile(
-            `${
-              image.substr(0, image.lastIndexOf(".")) || image
-            }-${sizeX}x${sizeY}-${colorFormat}.${outputFormat}`,
-            (err) => {
+          const newImage = sharp(image)
+            .resize(+sizeX, +sizeY)
+            .toFormat(outputFormat)
+            .toColorspace(colorFormat);
+
+          const newImageName = `${
+            image.substr(0, image.lastIndexOf(".")) || image
+          }-${sizeX}x${sizeY}-${colorFormat}.${outputFormat}`;
+
+          compress(newImage, outputFormat, compression)
+            .toFile(newImageName, (err) => {
+
               if (err) {
                 return console.error(err);
               }
 
-              getMetadata(
-                `${
-                  image.substr(0, image.lastIndexOf(".")) || image
-                }-${sizeX}x${sizeY}-${colorFormat}.${outputFormat}`
-              ).catch((err) => console.error(err));
-            }
-          );
+              getMetadata(newImageName).catch((err) => console.error(err));
+            })
+        }
       }
     )
     .catch((err) => console.error(err));

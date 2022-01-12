@@ -79,6 +79,12 @@ fs.readdir(process.cwd(), (err, files) => {
       },
       {
         type: "list",
+        name: "compression",
+        message: "Compression level(1->lowest quality,9->highest quality): ",
+        choices: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      },
+      {
+        type: "list",
         name: "outputFormat",
         message: "Select an output format: ",
         choices: [...OUTPUT_IMAGE_FORMATS],

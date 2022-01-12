@@ -29,19 +29,19 @@ const COLOR_MAP_OUTPUT = [
 ];
 
 async function getMetadata(file) {
-  let metadata = await sharp(file).metadata()
-  fs.stat(file, (err, {size}) => {
-
-    if (err){
-      return console.error(err)
+  let metadata = await sharp(file).metadata();
+  fs.stat(file, (err, { size }) => {
+    if (err) {
+      return console.error(err);
     }
 
-    const sizeToMb = `${(size / 1048576).toFixed(4)}Mb`
+    const sizeToMb = `${(size / 1048576).toFixed(4)}Mb`;
     metadata = {
       ...metadata,
       size: sizeToMb
-    }
-    console.log(file)
+    };
+
+    console.log(file);
     console.table(metadata);
   });
 }
@@ -116,8 +116,6 @@ fs.readdir(process.cwd(), (err, files) => {
             }
           );
       }
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+    )
+    .catch((err) => console.error(err));
 });

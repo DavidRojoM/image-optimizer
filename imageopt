@@ -7,6 +7,7 @@ const sharp = require("sharp");
 
 const INPUT_IMAGE_FORMATS = [
   "jpeg",
+  "jpg",
   "png",
   "webp",
   "avif",
@@ -38,7 +39,7 @@ async function getMetadata(file) {
     const sizeToMb = `${(size / 1048576).toFixed(4)}Mb`;
     metadata = {
       ...metadata,
-      size: sizeToMb
+      size: sizeToMb,
     };
 
     console.log(file);
@@ -111,7 +112,6 @@ fs.readdir(process.cwd(), (err, files) => {
     ])
     .then(
       ({ images, sizeX, sizeY, outputFormat, colorFormat, compression }) => {
-
         for (const image of images) {
           getMetadata(image).catch((err) => console.error(err));
 
